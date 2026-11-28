@@ -18,7 +18,7 @@ const payload=Buffer.from(JSON.stringify({uid:user.id,nonce,exp:Date.now()+60000
 const state=payload+'.'+crypto.createHmac('sha256',s).update(payload).digest('hex');
 res.setHeader('Set-Cookie','square_bound_state='+state+'; Path=/api/square; HttpOnly; Secure; SameSite=Lax; Max-Age=600');
 const url=new URL('https://connect.squareup.com/oauth2/authorize');
-url.search=new URLSearchParams({client_id:id,scope:'MERCHANT_PROFILE_READ PAYMENTS_READ PAYMENTS_WRITE',state,redirect_uri:redirect,session:'false'}).toString();
+url.search=new URLSearchParams({client_id:id,scope:'MERCHANT_PROFILE_READ PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_IN_PERSON',state,redirect_uri:redirect,session:'false'}).toString();
 return res.status(200).json({url:url.toString()});
 }catch{return res.status(502).end();}
 };
