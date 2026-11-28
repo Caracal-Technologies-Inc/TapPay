@@ -12,6 +12,8 @@ if(!r.ok)return res.status(401).end();
 const user=await r.json();
 if(!user.id||!user.email_confirmed_at)return res.status(403).end();
 const nonce=crypto.randomBytes(32).toString('hex');
+const saved=await fetch(u+'/rest/v1/square_oauth_states',{method:'POST',headers:{apikey:k,'Content-Type':'application/json'},body:JSON.stringify({nonce,owner_id:user.id,expires_at:new Date(Date.now()+600000).toISOString()})});
+if(!saved.ok)return res.status(503).end();
 const payload=Buffer.from(JSON.stringify({uid:user.id,nonce,exp:Date.now()+600000})).toString('base64url');
 const state=payload+'.'+crypto.createHmac('sha256',s).update(payload).digest('hex');
 res.setHeader('Set-Cookie','square_bound_state='+state+'; Path=/api/square; HttpOnly; Secure; SameSite=Lax; Max-Age=600');
